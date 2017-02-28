@@ -1,8 +1,14 @@
 import test from 'ava';
-import { parse, processRequest } from '../src/parse';
+import {
+  parse, 
+  processRequest,
+  collectComments
+} from '../src/parse';
 
 test('parse correct code', t => {
   let { ast, diagnostics } = parse(`
+    // Fancy comment
+
     function sum(a: number, b: number): number {
       return a + b;
     }
@@ -12,6 +18,7 @@ test('parse correct code', t => {
   t.is(ast.kind, 'SourceFile');
   t.is(ast.statements.length, 1);
   t.is(ast.statements[0].kind, 'FunctionDeclaration');
+  t.is(ast.comments.length, 1);
 });
 
 test('parse incorrect code', t => {
@@ -43,6 +50,34 @@ test('parse includes jsDoc comments', t => {
   t.is(ast.statements[0].jsDoc.length, 1);
   t.is(ast.statements[0].jsDoc[0].kind, 'JSDocComment');
 });
+
+test('collectComments only collects non-jsdoc', t => {
+  let comments = collectComments(`// foo bar baz
+
+  /* this is a multi
+   * line comment
+   */
+
+  /**
+   * this is jsdoc
+   */
+
+  // fooooo`);
+  
+  t.is(comments.length, 3);
+  let [ singleLine, multiLine, singleLineEof ] = comments;
+
+  let assertComment = (cmt, text, pos, end) => {
+    t.is(cmt.text, text);
+    t.is(cmt.pos, pos);
+    t.is(cmt.end, end);
+    t.is(cmt.kind, 'Comment');
+  };
+  assertComment(singleLine, 'foo bar baz', 0, 14);
+  assertComment(multiLine, `this is a multi
+   * line comment`, 18, 60);
+  assertComment(singleLineEof, 'fooooo', 96, 105);
+})
 
 test('processRequest with non json input', t => {
   let result;

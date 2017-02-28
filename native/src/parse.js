@@ -23,6 +23,8 @@ function parse(source) {
     false
   );
 
+  sourceFile.comments = collectComments(source);
+
   const diagnostics = (sourceFile.parseDiagnostics || [])
     .filter(d => d.category === 1)
     .map(d => `at ${d.start}:${d.start+d.length}: ${d.messageText}`);
@@ -38,6 +40,82 @@ function parse(source) {
   return {
     ast: sourceFile,
     diagnostics
+  };
+}
+
+/**
+ * Collects all non-JSDoc comments from the source file.
+ *
+ * @function collectComments
+ * @param {string} source - Source file content
+ * @returns {Array<ts.Node>}
+ */
+function collectComments(source) {
+  const src = Array.from(source);
+  let comments = [];
+  for (let i = 0, len = src.length; i < len; i++) {
+    const c = src[i];
+    const offset = i;
+    if (c === '/' && i+1 < len) {
+      let next = src[++i];
+      if (next === '/') {
+        while (src[i] !== '\n' && i < len) {
+          i++;
+        }
+        let comment = source.substring(offset, i);
+        comments.push(commentNode(offset, comment));
+      } else if (next === '*') {
+        if (i+1 < len) {
+          next = src[++i];
+          // check if it's JSDoc, ignore it, then, because ts already parses it
+          if (next === '*') {
+            continue;
+          }
+
+          while (i+1 < len && !(src[i] === '*' && src[i+1] === '/')) {
+            i++;
+          }
+
+          if (i+1 < len && src[i] === '*' && src[i+1] === '/') {
+            let comment = source.substring(offset, i+2);
+            comments.push(commentNode(offset, comment));
+          }
+        }
+      } else {
+        i--;  
+      }
+    }
+  }
+
+  return comments;
+}
+
+/**
+ * Creates a new comment node.
+ *
+ * @function commentNode
+ * @param {number} offset - Offset since the start of the file until the first
+ * character of the comment.
+ * @param {string} comment - Comment text containing /* *\/ and //.
+ * @returns {Object} comment node
+ */
+function commentNode(offset, comment) {
+  let text, pos, end;
+  if (comment.indexOf('/*') >= 0) {
+    pos = comment.indexOf('/*');
+    end = comment.indexOf('*/')+2;
+    text = comment.substring(pos+2, end-2).trim();
+  } else {
+    pos = comment.indexOf('//');
+    end = comment.length - pos;
+    text = comment.substring(pos+2).trim();
+  }
+
+  return {
+    kind: 'Comment',
+    text,
+    pos: offset+pos,
+    end: offset+end
   };
 }
 
@@ -119,5 +197,6 @@ function processRequest(line) {
 
 module.exports = {
   parse,
-  processRequest
+  processRequest,
+  collectComments
 };
