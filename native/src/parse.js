@@ -54,6 +54,14 @@ function normalizeNode(node) {
   // node.kind substitution MUST be done after normalizing the children
   // otherwise forEachChild does not know how to access them
   node.kind = nodeKinds[node.kind];
+  if ('jsDoc' in node) {
+    node.jsDoc = node.jsDoc.map(d => {
+      normalizeNode(d);
+      return d;
+    });
+  }
+  delete node.parent;
+  delete node.transformFlags;
   delete node.flags;
 }
 
@@ -71,14 +79,14 @@ const ERROR = 'error';
  * @return {string} JSON encoded result
  */
 function result(status, ast, ...diagnostics) {
-  const result = {
+  const output = {
     status,
     ast,
     errors: diagnostics.map(m => ({ message: m }))
   }
 
   try {
-    return JSON.stringify(result);
+    return JSON.stringify(output, (k, v) => k === 'parent' ? null : v);
   } catch (e) {
     return result(FATAL, null, `Unable to encode response to JSON: ${e.message}`);
   }

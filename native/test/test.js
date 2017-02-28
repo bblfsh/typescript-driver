@@ -24,6 +24,26 @@ test('parse incorrect code', t => {
   t.is(ast.kind, 'SourceFile');
 });
 
+test('parse includes jsDoc comments', t => {
+  let { ast, diagnostics } = parse(`
+  /**
+   * Returns the sum of two numbers.
+   * @function sum
+   * @param {number} a - First number
+   * @param {number} b - Second number
+   * @returns {number} the sum
+   */
+  function sum(a: number, b: number): number {
+    return a + b;
+  }
+  `);
+
+  t.is(diagnostics.length, 0);
+  t.is(ast.kind, 'SourceFile');
+  t.is(ast.statements[0].jsDoc.length, 1);
+  t.is(ast.statements[0].jsDoc[0].kind, 'JSDocComment');
+});
+
 test('processRequest with non json input', t => {
   let result;
   try {
