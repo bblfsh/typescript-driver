@@ -34,6 +34,7 @@ function parse(source) {
   // useful in the output. Text we already had and fileName is not real
   // so there's no point in keeping it
   normalizeNode(lineMap, sourceFile);
+  delete sourceFile.endOfFileToken;
   delete sourceFile.text;
   delete sourceFile.fileName;
   delete sourceFile.parseDiagnostics;
