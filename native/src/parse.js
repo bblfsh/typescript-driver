@@ -23,7 +23,8 @@ function parse(source) {
     false
   );
 
-  sourceFile.comments = collectComments(source);
+  const lineMap = makeLineMap(source);
+  sourceFile.comments = collectComments(lineMap, source);
 
   const diagnostics = (sourceFile.parseDiagnostics || [])
     .filter(d => d.category === 1)
@@ -32,7 +33,7 @@ function parse(source) {
   // normalization of the AST and remove some properties that are not
   // useful in the output. Text we already had and fileName is not real
   // so there's no point in keeping it
-  normalizeNode(sourceFile);
+  normalizeNode(lineMap, sourceFile);
   delete sourceFile.text;
   delete sourceFile.fileName;
   delete sourceFile.parseDiagnostics;
@@ -44,13 +45,68 @@ function parse(source) {
 }
 
 /**
+ * Creates a new mapping between lines and offsets from the source code.
+ *
+ * @function makeLineMap
+ * @param {string} source - source code
+ * @return {Array<Object>}
+ */
+function makeLineMap(source) {
+  const src = Array.from(source);
+  let lines = [];
+  let offset = -1;
+  let i, len;
+  let line = 1;
+
+  for (i = 0, len = src.length; i < len; i++) {
+    if (offset < 0) {
+      offset = i;
+    }
+
+    if (src[i] == '\n' || src[i] == '\r') {
+      lines.push({ start: offset, end: i, line });
+      line++;
+      offset = -1;
+    }
+  }
+  
+  if (offset >= 0) {
+    lines.push({ start: offset, end: i, line});
+  }
+
+  return lines;
+}
+
+/**
+ * Finds the line and column of a node given its pos and the line map.
+ *
+ * @function findNodePos
+ * @param {Array<Object>} lineMap - Mapping of offsets to lines.
+ * @param {number} pos - Offset of the token start
+ * @return {Object} line and col
+ */
+function findNodePos(lineMap, pos) {
+  let l = -1, col = -1;
+  for (let i = 0, len = lineMap.length; i < len; i++) {
+    const { start, end, line } = lineMap[i];
+    if (start <= pos && end >= pos) {
+      l = line;
+      col = pos - start + 1;
+      break;
+    }
+  }
+
+  return { line: l, col };
+}
+
+/**
  * Collects all non-JSDoc comments from the source file.
  *
  * @function collectComments
  * @param {string} source - Source file content
  * @returns {Array<ts.Node>}
  */
-function collectComments(source) {
+function collectComments(lineMap, source) {
   const src = Array.from(source);
   let comments = [];
   for (let i = 0, len = src.length; i < len; i++) {
@@ -63,7 +119,7 @@ function collectComments(source) {
           i++;
         }
         let comment = source.substring(offset, i);
-        comments.push(commentNode(offset, comment));
+        comments.push(commentNode(lineMap, offset, comment));
       } else if (next === '*') {
         if (i+1 < len) {
           next = src[++i];
@@ -78,7 +134,7 @@ function collectComments(source) {
 
           if (i+1 < len && src[i] === '*' && src[i+1] === '/') {
             let comment = source.substring(offset, i+2);
-            comments.push(commentNode(offset, comment));
+            comments.push(commentNode(lineMap, offset, comment));
           }
         }
       } else {
@@ -99,7 +155,7 @@ function collectComments(source) {
  * @param {string} comment - Comment text containing /* *\/ and //.
  * @returns {Object} comment node
  */
-function commentNode(offset, comment) {
+function commentNode(lineMap, offset, comment) {
   let text, pos, end;
   if (comment.indexOf('/*') >= 0) {
     pos = comment.indexOf('/*');
@@ -111,12 +167,8 @@ function commentNode(offset, comment) {
     text = comment.substring(pos+2).trim();
   }
 
-  return {
-    kind: 'Comment',
-    text,
-    pos: offset+pos,
-    end: offset+end
-  };
+  const { line, col } = findNodePos(lineMap, offset+pos);
+  return { kind: 'Comment', text, line, col };
 }
 
 /**
@@ -127,14 +179,17 @@ function commentNode(offset, comment) {
  * @function normalizeNode
  * @param {ts.Node} node - Node to normalize
  */
-function normalizeNode(node) {
-  forEachChild(node, normalizeNode);
+function normalizeNode(lineMap, node) {
+  forEachChild(node, n => normalizeNode(lineMap, n));
   // node.kind substitution MUST be done after normalizing the children
   // otherwise forEachChild does not know how to access them
   node.kind = nodeKinds[node.kind];
+  const { line, col } = findNodePos(lineMap, node.pos);
+  node.line = line;
+  node.col = col;
   if ('jsDoc' in node) {
     node.jsDoc = node.jsDoc.map(d => {
-      normalizeNode(d);
+      normalizeNode(lineMap, d);
       return d;
     });
   }
@@ -198,5 +253,6 @@ function processRequest(line) {
 module.exports = {
   parse,
   processRequest,
-  collectComments
+  collectComments,
+  makeLineMap
 };

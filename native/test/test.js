@@ -2,7 +2,8 @@ import test from 'ava';
 import {
   parse, 
   processRequest,
-  collectComments
+  collectComments,
+  makeLineMap
 } from '../src/parse';
 
 test('parse correct code', t => {
@@ -52,7 +53,7 @@ test('parse includes jsDoc comments', t => {
 });
 
 test('collectComments only collects non-jsdoc', t => {
-  let comments = collectComments(`// foo bar baz
+  let source = `// foo bar baz
 
   /* this is a multi
    * line comment
@@ -62,21 +63,23 @@ test('collectComments only collects non-jsdoc', t => {
    * this is jsdoc
    */
 
-  // fooooo`);
+  // fooooo`;
+  let lineMap = makeLineMap(source);
+  let comments = collectComments(lineMap, source);
   
   t.is(comments.length, 3);
   let [ singleLine, multiLine, singleLineEof ] = comments;
 
-  let assertComment = (cmt, text, pos, end) => {
+  let assertComment = (cmt, text, line, col) => {
     t.is(cmt.text, text);
-    t.is(cmt.pos, pos);
-    t.is(cmt.end, end);
+    t.is(cmt.line, line);
+    t.is(cmt.col, col);
     t.is(cmt.kind, 'Comment');
   };
-  assertComment(singleLine, 'foo bar baz', 0, 14);
+  assertComment(singleLine, 'foo bar baz', 1, 1);
   assertComment(multiLine, `this is a multi
-   * line comment`, 18, 60);
-  assertComment(singleLineEof, 'fooooo', 96, 105);
+   * line comment`, 3, 3);
+  assertComment(singleLineEof, 'fooooo', 11, 3);
 })
 
 test('processRequest with non json input', t => {
