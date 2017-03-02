@@ -3,9 +3,32 @@
 const {
   createSourceFile,
   ScriptTarget,
-  forEachChild
+  forEachChild,
+  NodeFlags,
+  SyntaxKind
 } = require('typescript');
-const nodeKinds = require('./kinds');
+
+/**
+ * TypeScript enumerations are transpiled to an object with the following form:
+ * {
+ *  '0': 'NameOfFirstValue',
+ *  ...
+ *  'N': 'NameOfLastValue',
+ *  'NameOfFirstValue': 0,
+ *  ...
+ *  'NameOfLastValue': n,
+ * }
+ *
+ * Because of that, we just have to skip the first N keys to get an array with
+ * the names of all properties of an enum.
+ * SyntaxKind has a property called `Count`, which is the last value of the
+ * enum. That give us the starting point without having to iterate the array.
+ *
+ * @constant
+ * @type {Array<string>}
+ * @see {@link https://github.com/Microsoft/TypeScript/blob/a29e8cf2406dd41aea48be0fb68cde6a2e972564/src/compiler/types.ts#L52-L428}
+ */
+const nodeKinds = Object.keys(SyntaxKind).slice(SyntaxKind.Count+1);
 
 /**
  * Parses the given TypeScript source code and returns a string with
@@ -188,7 +211,7 @@ function normalizeNode(lineMap, node) {
   const { line, col } = findNodePos(lineMap, node.pos);
   node.line = line;
   node.col = col;
-  if ('jsDoc' in node) {
+  if (node.jsDoc) {
     node.jsDoc = node.jsDoc.map(d => {
       normalizeNode(lineMap, d);
       return d;
@@ -196,7 +219,29 @@ function normalizeNode(lineMap, node) {
   }
   delete node.parent;
   delete node.transformFlags;
-  delete node.flags;
+
+  if (node.flags) {
+    node.flags = transformFlags(node.flags);
+  } else {
+    node.flags = [];
+  }
+}
+
+/**
+ * Transforms binary flags to human readable flags.
+ *
+ * @function transformFlags
+ * @param {number} flags - Binary flags
+ * @returns {Array<string>}
+ */
+function transformFlags(flags) {
+  let result = [];
+  for (let flag in NodeFlags) {
+    if (NodeFlags.hasOwnProperty(flag) && (flags & NodeFlags[flag])) {
+      result.push(flag);
+    }
+  }
+  return result;
 }
 
 const OK = 'ok';
