@@ -1,0 +1,22 @@
+{
+  "name": "typescript-driver",
+  "version": "1.0.0",
+  "description": "TypeScript babelfish driver",
+  "main": "src/index.js",
+  "repository": "https://github.com/bblfsh/typescript-driver",
+  "author": "Miguel Molina <hi@mvader.me>",
+  "license": "GPLv3",
+  "dependencies": {
+    "typescript": "^2.2.1"
+  },
+  "ava": {
+    "files": ["test/*.js"]
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "ava -v"
+  },
+  "devDependencies": {
+    "ava": "^0.18.2"
+  }
+}
