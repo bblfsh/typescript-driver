@@ -1,10 +1,12 @@
-include .sdk/Makefile
+-include .sdk/Makefile
 
-test-native:
+$(if $(filter true,$(sdkloaded)),,$(error You must install bblfsh-sdk))
+
+test-native-internal:
 	cd native; \
 	echo "yarn test"
 
-build-native:
+build-native-internal:
 	cd native; \
 	yarn install; \
 	cp *.js $(BUILD_PATH); \
