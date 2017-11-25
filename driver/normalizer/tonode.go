@@ -1,6 +1,8 @@
 package normalizer
 
 import (
+	"fmt"
+
 	"gopkg.in/bblfsh/sdk.v1/uast"
 )
 
@@ -21,5 +23,24 @@ var ToNode = &uast.ObjectToNode{
 	IsNode: func(v map[string]interface{}) bool {
 		_, ok := v["kind"].(string)
 		return ok
+	},
+	// Current sdk doesn't accept arrays in AST
+	// https://github.com/bblfsh/sdk/pull/213
+	Modifier: func(n map[string]interface{}) error {
+		if flags, ok := n["flags"].([]interface{}); ok {
+			var newFlags map[string]bool
+			if len(flags) > 0 {
+				newFlags = make(map[string]bool, len(flags))
+			}
+			for _, f := range flags {
+				flagStr, ok := f.(string)
+				if !ok {
+					return fmt.Errorf("flag %+v isn't string", f)
+				}
+				newFlags[flagStr] = true
+			}
+			n["flags"] = newFlags
+		}
+		return nil
 	},
 }
