@@ -8,6 +8,6 @@ test-native-internal:
 
 build-native-internal:
 	cd native; \
-	yarn && yarn build && \
+	yarn --production=false && yarn build && \
 	cp lib/index.js $(BUILD_PATH)/bin/native && \
 	chmod +x $(BUILD_PATH)/bin/native
