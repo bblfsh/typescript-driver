@@ -18,7 +18,7 @@ RUN mkdir -p /opt/driver/src && \
 # As minimal build tools you need: make, curl and git, install using the same
 # command the specific tools required to build the driver.
 RUN apk add --no-cache make git curl ca-certificates \
-    nodejs nodejs-npm
+    nodejs="6.10.3-r1" nodejs-npm
 
 RUN npm install -g yarn
 

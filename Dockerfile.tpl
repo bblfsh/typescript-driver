@@ -9,7 +9,7 @@
 #   bblfsh/<language>-driver-build
 FROM alpine:3.6
 
-RUN apk add --no-cache nodejs
+RUN apk add --no-cache nodejs="6.10.3-r1"
 
 ADD build /opt/driver
 ENTRYPOINT /opt/driver/bin/driver
