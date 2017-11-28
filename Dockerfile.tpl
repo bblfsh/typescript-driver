@@ -7,6 +7,9 @@
 # version of Debian (eg.: `debian:jessie-slim`). If the excution environment
 # is equals to the build environment the build image can be use as FROM:
 #   bblfsh/<language>-driver-build
-FROM alpine:3.5
+FROM alpine:3.6
 
-CMD /opt/driver/bin/driver
+RUN apk add --no-cache nodejs="6.10.3-r1"
+
+ADD build /opt/driver
+ENTRYPOINT /opt/driver/bin/driver
