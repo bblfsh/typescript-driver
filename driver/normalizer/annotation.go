@@ -5,6 +5,7 @@ import (
 	. "gopkg.in/bblfsh/sdk.v1/uast/ann"
 	"gopkg.in/bblfsh/sdk.v1/uast/transformer"
 	"gopkg.in/bblfsh/sdk.v1/uast/transformer/annotatter"
+	"gopkg.in/bblfsh/sdk.v1/uast/transformer/positioner"
 )
 
 // Transformers is the of list `transformer.Transfomer` to apply to a UAST, to
@@ -12,6 +13,7 @@ import (
 // https://godoc.org/gopkg.in/bblfsh/sdk.v1/uast/transformers
 var Transformers = []transformer.Tranformer{
 	annotatter.NewAnnotatter(AnnotationRules),
+	positioner.NewFillLineColFromOffset(),
 }
 
 // AnnotationRules describes how a UAST should be annotated with `uast.Role`.
