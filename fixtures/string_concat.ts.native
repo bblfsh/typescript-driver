@@ -7,7 +7,7 @@
         "bindDiagnostics": [],
         "col": 1,
         "comments": [],
-        "end": 66,
+        "end": 28,
         "flags": [],
         "identifierCount": 1,
         "identifiers": {},
@@ -15,7 +15,7 @@
         "kind": "SourceFile",
         "languageVariant": 0,
         "line": 1,
-        "nodeCount": 7,
+        "nodeCount": 10,
         "pos": 0,
         "referencedFiles": [],
         "scriptKind": 3,
@@ -27,23 +27,48 @@
                     "declarations": [
                         {
                             "col": 4,
-                            "end": 64,
+                            "end": 26,
                             "flags": [],
                             "initializer": {
-                                "col": 13,
-                                "end": 64,
+                                "col": 8,
+                                "end": 26,
                                 "flags": [],
-                                "kind": "NoSubstitutionTemplateLiteral",
+                                "kind": "BinaryExpression",
+                                "left": {
+                                    "col": 8,
+                                    "end": 15,
+                                    "flags": [],
+                                    "kind": "StringLiteral",
+                                    "line": 1,
+                                    "pos": 7,
+                                    "text": "first"
+                                },
                                 "line": 1,
-                                "pos": 12,
-                                "text": "Never gonna give you up;\nNever gonna let you down"
+                                "operatorToken": {
+                                    "col": 16,
+                                    "end": 17,
+                                    "flags": [],
+                                    "kind": "PlusToken",
+                                    "line": 1,
+                                    "pos": 15
+                                },
+                                "pos": 7,
+                                "right": {
+                                    "col": 18,
+                                    "end": 26,
+                                    "flags": [],
+                                    "kind": "StringLiteral",
+                                    "line": 1,
+                                    "pos": 17,
+                                    "text": "second"
+                                }
                             },
                             "kind": "VariableDeclaration",
                             "line": 1,
                             "name": {
                                 "col": 4,
-                                "end": 10,
-                                "escapedText": "lyrics",
+                                "end": 5,
+                                "escapedText": "a",
                                 "flags": [],
                                 "kind": "Identifier",
                                 "line": 1,
@@ -52,7 +77,7 @@
                             "pos": 3
                         }
                     ],
-                    "end": 64,
+                    "end": 26,
                     "flags": [
                         "Let",
                         "BlockScoped"
@@ -61,7 +86,7 @@
                     "line": 1,
                     "pos": 0
                 },
-                "end": 65,
+                "end": 27,
                 "flags": [],
                 "kind": "VariableStatement",
                 "line": 1,
