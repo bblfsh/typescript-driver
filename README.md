@@ -1,4 +1,4 @@
-# typescript-driver  ![Driver Status](https://img.shields.io/badge/status-alpha-db975c.svg) [![Build Status](https://travis-ci.org/bblfsh/typescript-driver.svg?branch=master)](https://travis-ci.org/bblfsh/typescript-driver) ![Native Version](https://img.shields.io/badge/typescript%20version-2.2.1-aa93ea.svg) ![Go Version](https://img.shields.io/badge/go%20version-1.8-63afbf.svg)
+# typescript-driver  ![Driver Status](https://img.shields.io/badge/status-alpha-db975c.svg) [![Build Status](https://travis-ci.org/bblfsh/typescript-driver.svg?branch=master)](https://travis-ci.org/bblfsh/typescript-driver) ![Native Version](https://img.shields.io/badge/typescript%20version-2.2.1-aa93ea.svg) ![Go Version](https://img.shields.io/badge/go%20version-1.10-63afbf.svg)
 
 typescript driver for [babelfish](https://github.com/bblfsh/server).
 
@@ -8,7 +8,7 @@ Development Environment
 
 Requirements:
 - `docker`
-- [`bblfsh-sdk`](https://github.com/bblfsh/sdk) _(go get -u gopkg.in/bblfsh/sdk.v1/...)_
+- [`bblfsh-sdk`](https://github.com/bblfsh/sdk) _(go get -u gopkg.in/bblfsh/sdk.v2/...)_
 - UAST converter dependencies _(go get -t -v ./...)_
 
 To initialize the build system execute: `bblfsh-sdk prepare-build`, at the root of the project. This will install the SDK at `.sdk` for this driver.

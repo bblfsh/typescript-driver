@@ -261,7 +261,7 @@ function result(status, ast, ...diagnostics) {
   const output = {
     status,
     ast,
-    errors: diagnostics.map(m => ({ message: m }))
+    errors: diagnostics.map(m => (m))
   }
 
   try {
