@@ -1,4 +1,4 @@
-{ '@type': "SourceFile",
+{ '@type': "typescript:SourceFile",
    '@role': [Unannotated],
    '@pos': { '@type': "uast:Positions",
       start: { '@type': "uast:Position",
