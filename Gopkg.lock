@@ -2,31 +2,10 @@
 
 
 [[projects]]
-  branch = "master"
-  name = "github.com/Azure/go-ansiterm"
-  packages = [
-    ".",
-    "winterm"
-  ]
-  revision = "d6e3b3328b783f23731bc4d058875b0371ff8109"
-
-[[projects]]
   name = "github.com/BurntSushi/toml"
   packages = ["."]
   revision = "b26d9c308763d68093482582cea63d69be07a0f0"
   version = "v0.3.0"
-
-[[projects]]
-  name = "github.com/Microsoft/go-winio"
-  packages = ["."]
-  revision = "a6d595ae73cf27a1b8fc32930668708f45ce1c85"
-  version = "v0.4.9"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/Nvveen/Gotty"
-  packages = ["."]
-  revision = "cd527374f1e5bff4938207604a14f2e38a9cf512"
 
 [[projects]]
   branch = "master"
@@ -35,28 +14,10 @@
   revision = "3a0bb77429bd3a61596f5e8a3172445844342120"
 
 [[projects]]
-  branch = "master"
-  name = "github.com/containerd/continuity"
-  packages = ["pathdriver"]
-  revision = "0377f7d767206f3a9e8881d0f02267b0d89c7a62"
-
-[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
   version = "v1.1.0"
-
-[[projects]]
-  name = "github.com/docker/go-connections"
-  packages = ["nat"]
-  revision = "3ede32e2033de7505e6500d6c868c2b9ed9f169d"
-  version = "v0.3.0"
-
-[[projects]]
-  name = "github.com/docker/go-units"
-  packages = ["."]
-  revision = "47565b4f722fb6ceae66b95f853feed578a4a51c"
-  version = "v0.3.3"
 
 [[projects]]
   name = "github.com/fatih/color"
@@ -119,27 +80,6 @@
   revision = "9520e82c474b0a04dd04f8a40959027271bab992"
 
 [[projects]]
-  name = "github.com/opencontainers/go-digest"
-  packages = ["."]
-  revision = "279bed98673dd5bef374d3b6e4b09e2af76183bf"
-  version = "v1.0.0-rc1"
-
-[[projects]]
-  name = "github.com/opencontainers/image-spec"
-  packages = [
-    "specs-go",
-    "specs-go/v1"
-  ]
-  revision = "d60099175f88c47cd379c4738d158884749ed235"
-  version = "v1.0.1"
-
-[[projects]]
-  name = "github.com/opencontainers/runc"
-  packages = ["libcontainer/user"]
-  revision = "4fc53a81fb7c994640722ac585fa9ca548971871"
-  version = "v1.0.0-rc5"
-
-[[projects]]
   name = "github.com/opentracing/opentracing-go"
   packages = [
     ".",
@@ -148,36 +88,6 @@
   ]
   revision = "1949ddbfd147afd4d964a9f00b24eb291e0e7c38"
   version = "v1.0.2"
-
-[[projects]]
-  name = "github.com/ory/dockertest"
-  packages = [
-    "docker",
-    "docker/opts",
-    "docker/pkg/archive",
-    "docker/pkg/fileutils",
-    "docker/pkg/homedir",
-    "docker/pkg/idtools",
-    "docker/pkg/ioutils",
-    "docker/pkg/jsonmessage",
-    "docker/pkg/longpath",
-    "docker/pkg/mount",
-    "docker/pkg/pools",
-    "docker/pkg/stdcopy",
-    "docker/pkg/system",
-    "docker/pkg/term",
-    "docker/pkg/term/windows",
-    "docker/types",
-    "docker/types/blkiodev",
-    "docker/types/container",
-    "docker/types/filters",
-    "docker/types/mount",
-    "docker/types/network",
-    "docker/types/registry",
-    "docker/types/strslice",
-    "docker/types/versions"
-  ]
-  revision = "1ff4d597ac09e84e6f3edfc340b22d5544da1eb2"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -352,7 +262,6 @@
     "driver/native",
     "driver/native/jsonlines",
     "driver/server",
-    "internal/docker",
     "protocol",
     "protocol/v1",
     "uast",
@@ -365,8 +274,8 @@
     "uast/viewer",
     "uast/yaml"
   ]
-  revision = "7f43f27c14a259a0a396cc70c911424b8e8b11c1"
-  version = "v2.15.0"
+  revision = "82ab50025f39a4d522a9124f69bd9cf5220ed6b9"
+  version = "v2.16.0"
 
 [[projects]]
   name = "gopkg.in/src-d/go-errors.v1"
@@ -383,6 +292,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "9db388c999b4d8f7da5635d52ffa1fcf25fb76ff0149193fb32264e34da4d70d"
+  inputs-digest = "0efd218714c72223a701884c98ef7398ae20a4036f3e9a0de4179d34bebe8f32"
   solver-name = "gps-cdcl"
   solver-version = 1
