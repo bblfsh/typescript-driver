@@ -4,10 +4,10 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/bblfsh/sdk/v3/driver"
+	"github.com/bblfsh/sdk/v3/driver/fixtures"
+	"github.com/bblfsh/sdk/v3/driver/native"
 	"github.com/bblfsh/typescript-driver/driver/normalizer"
-	"gopkg.in/bblfsh/sdk.v2/driver"
-	"gopkg.in/bblfsh/sdk.v2/driver/fixtures"
-	"gopkg.in/bblfsh/sdk.v2/driver/native"
 )
 
 const projectRoot = "../../"
