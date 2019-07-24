@@ -29,6 +29,7 @@ RUN yarn && yarn build
 # Stage 1.1: Native Driver Tests
 #================================
 FROM native as native_test
+
 # run native driver tests
 RUN yarn test
 
@@ -48,6 +49,9 @@ ADD driver $DRIVER_REPO_PATH/driver
 WORKDIR $DRIVER_REPO_PATH/
 
 ENV GO111MODULE=on GOFLAGS=-mod=vendor
+
+# workaround for https://github.com/golang/go/issues/28065
+ENV CGO_ENABLED=0
 
 # build server binary
 RUN go build -o /tmp/driver ./driver/main.go
