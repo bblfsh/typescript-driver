@@ -6,4 +6,4 @@ build
 .config
 native/node_modules/
 native/lib/
-native/yarn-error.log
+native/yarn-error.logvendor/
