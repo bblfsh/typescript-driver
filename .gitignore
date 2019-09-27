@@ -7,3 +7,4 @@ build
 native/node_modules/
 native/lib/
 native/yarn-error.log
+vendor/
